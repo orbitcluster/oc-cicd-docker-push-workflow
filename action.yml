@@ -54,6 +54,7 @@ runs:
         TAG: ${{ inputs.tag }}
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_NAME: ${{ inputs.image-name }}
+        IMAGE_TYPE: ${{ inputs.image_type }}
       run: |
         chmod +x ${{ github.action_path }}/scripts/push_to_ecr.sh
         ${{ github.action_path }}/scripts/push_to_ecr.sh

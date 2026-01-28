@@ -14,10 +14,37 @@ else
   echo "Repository $REPO_NAME already exists."
 fi
 
-ECR_IMAGE="$REGISTRY/$REPO_NAME:$TAG"
+if [ "$IMAGE_TYPE" == "helm" ]; then
+    echo "Processing Helm Chart push..."
+    
+    # Login to ECR for Helm
+    aws ecr get-login-password --region "$REGION" | helm registry login --username AWS --password-stdin "$REGISTRY"
 
-echo "Tagging image as $ECR_IMAGE"
-docker tag "$IMAGE_NAME:$TAG" "$ECR_IMAGE"
+    # Chart Package Name (Standard: name-version.tgz)
+    # Assuming IMAGE_NAME is the chart name
+    CHART_FILE="${IMAGE_NAME}-${TAG}.tgz"
+    
+    if [ ! -f "$CHART_FILE" ]; then
+        echo "Error: Chart package $CHART_FILE not found in current directory."
+        exit 1
+    fi
 
-echo "Pushing image to ECR"
-docker push "$ECR_IMAGE"
+    # Push to ECR
+    # We push to the "Namespace" (Org-Build-App). Helm appends the chart name.
+    # So if we want: registry/org-buid-app/image-name
+    # We push to: oci://registry/org-buid-app
+    TARGET_OCI="oci://$REGISTRY/${ORGID}-${BUID}-${APPID}"
+    
+    echo "Pushing $CHART_FILE to $TARGET_OCI"
+    helm push "$CHART_FILE" "$TARGET_OCI"
+
+else
+    # Docker Push Logic
+    ECR_IMAGE="$REGISTRY/$REPO_NAME:$TAG"
+
+    echo "Tagging image as $ECR_IMAGE"
+    docker tag "$IMAGE_NAME:$TAG" "$ECR_IMAGE"
+
+    echo "Pushing image to ECR"
+    docker push "$ECR_IMAGE"
+fi
