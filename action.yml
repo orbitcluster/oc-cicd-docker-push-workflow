@@ -25,7 +25,8 @@ inputs:
     required: true
   region:
     description: "Region"
-    required: true
+    required: false
+    default: "us-east-1"
 
 runs:
   using: "composite"
