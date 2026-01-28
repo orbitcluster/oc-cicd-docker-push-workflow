@@ -15,16 +15,16 @@ This composite action performs the following steps:
 
 ## Inputs
 
-| Input            | Description                          | Required | Default  |
-| ---------------- | ------------------------------------ | -------- | -------- |
-| `image_type`     | Image type                           | `false`  | `docker` |
-| `image-name`     | Local image name to push             | `true`   |          |
-| `tag`            | Image tag                            | `true`   |          |
-| `appid`          | Application ID (used for repo name)  | `true`   |          |
-| `orgid`          | Organization ID (used for repo name) | `true`   |          |
-| `buid`           | Build ID (used for repo name)        | `true`   |          |
-| `role-to-assume` | AWS IAM Role to assume               | `true`   |          |
-| `region`         | AWS Region                           | `true`   |          |
+| Input            | Description                          | Required | Default     |
+| ---------------- | ------------------------------------ | -------- | ----------- |
+| `image_type`     | Image type                           | `false`  | `docker`    |
+| `image-name`     | Local image name to push             | `true`   |             |
+| `tag`            | Image tag                            | `true`   |             |
+| `appid`          | Application ID (used for repo name)  | `true`   |             |
+| `orgid`          | Organization ID (used for repo name) | `true`   |             |
+| `buid`           | Build ID (used for repo name)        | `true`   |             |
+| `role-to-assume` | AWS IAM Role to assume               | `true`   |             |
+| `region`         | AWS Region                           | `false`  | `us-east-1` |
 
 ## Usage
 
@@ -49,4 +49,4 @@ steps:
 ## Repository Naming Convention
 
 The ECR repository name is automatically generated using the following format:
-`{orgid}-{buid}-{appid}`
+`{orgid}-{buid}-{appid}/{image-name}`
