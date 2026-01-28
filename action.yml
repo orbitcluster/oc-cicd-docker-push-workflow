@@ -36,7 +36,7 @@ runs:
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ inputs.role-to-assume }}
-        region: ${{ inputs.region }}
+        aws-region: ${{ inputs.region }}
         role-session-name: githubactions-${{ github.run_id }}
 
     - name: Login to Amazon ECR
