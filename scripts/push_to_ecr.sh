@@ -5,6 +5,7 @@ set -e
 # This creates a structure like: orgid-buid-appid/image-name
 REPO_NAME="${ORGID}-${BUID}-${APPID}/${IMAGE_NAME}"
 echo "Repository Name: $REPO_NAME"
+echo "Image Type: '$IMAGE_TYPE'"
 
 # Check if repository exists
 if ! aws ecr describe-repositories --repository-names "$REPO_NAME" --region "$REGION" > /dev/null 2>&1; then
