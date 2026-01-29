@@ -27,6 +27,10 @@ inputs:
     description: "Action type: push or cleanup"
     required: false
     default: "push"
+  region:
+    description: "Region"
+    required: false
+    default: "us-east-1"
   # Clean up input
   branch-name:
     description: "Branch name for cleanup filter"
