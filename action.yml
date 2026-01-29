@@ -1,10 +1,6 @@
 name: "Docker Push"
 description: "Perform Docker Push"
 inputs:
-  image_type:
-    description: "Image type"
-    required: false
-    default: "docker"
   image-name:
     description: "Image name"
     required: true
@@ -51,7 +47,7 @@ runs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Push to AWS ECR
+    - name: Push Docker Image to AWS ECR
       if: inputs.action_type == 'push'
       id: push-to-ecr
       shell: bash
@@ -63,10 +59,10 @@ runs:
         TAG: ${{ inputs.tag }}
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_NAME: ${{ inputs.image-name }}
-        IMAGE_TYPE: ${{ inputs.image_type }}
+
       run: |
-        chmod +x ${{ github.action_path }}/scripts/push_to_ecr.sh
-        ${{ github.action_path }}/scripts/push_to_ecr.sh
+        chmod +x ${{ github.action_path }}/scripts/push_docker_to_ecr.sh
+        ${{ github.action_path }}/scripts/push_docker_to_ecr.sh
 
     - name: Cleanup AWS ECR
       if: inputs.action_type == 'cleanup'
