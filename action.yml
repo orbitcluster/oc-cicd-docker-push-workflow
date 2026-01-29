@@ -23,10 +23,14 @@ inputs:
   role-to-assume:
     description: "Role to assume"
     required: true
-  region:
-    description: "Region"
+  action_type:
+    description: "Action type: push or cleanup"
     required: false
-    default: "us-east-1"
+    default: "push"
+  # Clean up input
+  branch-name:
+    description: "Branch name for cleanup filter"
+    required: false
 
 runs:
   using: "composite"
@@ -44,6 +48,7 @@ runs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Push to AWS ECR
+      if: inputs.action_type == 'push'
       id: push-to-ecr
       shell: bash
       env:
@@ -58,3 +63,19 @@ runs:
       run: |
         chmod +x ${{ github.action_path }}/scripts/push_to_ecr.sh
         ${{ github.action_path }}/scripts/push_to_ecr.sh
+
+    - name: Cleanup AWS ECR
+      if: inputs.action_type == 'cleanup'
+      id: cleanup-ecr
+      shell: bash
+      env:
+        ORGID: ${{ inputs.orgid }}
+        BUID: ${{ inputs.buid }}
+        APPID: ${{ inputs.appid }}
+        REGION: ${{ inputs.region }}
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_NAME: ${{ inputs.image-name }}
+        BRANCH_NAME: ${{ inputs.branch-name }}
+      run: |
+        chmod +x ${{ github.action_path }}/scripts/cleanup_ecr.sh
+        ${{ github.action_path }}/scripts/cleanup_ecr.sh
