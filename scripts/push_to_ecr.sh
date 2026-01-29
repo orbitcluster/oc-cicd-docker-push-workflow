@@ -17,14 +17,14 @@ fi
 
 if [ "$IMAGE_TYPE" == "helm" ]; then
     echo "Processing Helm Chart push..."
-    
+
     # Login to ECR for Helm
     aws ecr get-login-password --region "$REGION" | helm registry login --username AWS --password-stdin "$REGISTRY"
 
     # Chart Package Name (Standard: name-version.tgz)
     # Assuming IMAGE_NAME is the chart name
     CHART_FILE="${IMAGE_NAME}-${TAG}.tgz"
-    
+
     if [ ! -f "$CHART_FILE" ]; then
         echo "Error: Chart package $CHART_FILE not found in current directory."
         exit 1
@@ -35,7 +35,7 @@ if [ "$IMAGE_TYPE" == "helm" ]; then
     # So if we want: registry/org-buid-app/image-name
     # We push to: oci://registry/org-buid-app
     TARGET_OCI="oci://$REGISTRY/${ORGID}-${BUID}-${APPID}"
-    
+
     echo "Pushing $CHART_FILE to $TARGET_OCI"
     helm push "$CHART_FILE" "$TARGET_OCI"
 
